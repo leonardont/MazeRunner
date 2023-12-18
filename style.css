@@ -30,10 +30,10 @@ html, body {
     display: block;
     border: solid 2px black;
     height: 400px;
-    background-color: #fff;
+    /* background-color: transparent;
     background-image: url("fundo.gif");
     background-position: center;
-    background-size: cover;
+    background-size: cover; */
 }
 input, select {
     cursor: pointer;

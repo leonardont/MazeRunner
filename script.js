@@ -1,3 +1,41 @@
+
+var mazeCanvas = document.getElementById("mazeCanvas");
+var ctx = mazeCanvas.getContext("2d");
+var sprite, finishSprite, maze, draw, player;
+var cellSize, difficulty;
+var largura, altura;
+
+var mousePosX,
+  mousePosY,
+  dificuldade = 1;
+
+var togglePlayer = false;
+
+  var fundo = new Image();
+  fundo.src = "./fundo.gif";
+
+var mouse = {
+  x: 0,
+  y: 0,
+  radius: 180,
+  desenhar: function () {
+    if(difficulty == 10){
+      this.radius = 180;
+    } else if(difficulty == 15){
+      this.radius = 150;
+    } else if(difficulty == 25){
+      this.radius = 120;
+    } else if(difficulty == 38){
+      this.radius = 70;
+    }
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(mousePosX, mousePosY, this.radius, 0, 2 * Math.PI);
+    ctx.rect(largura, 0, -largura, altura);
+    ctx.fill();
+  },
+};
+
 function rand(max) {
     return Math.floor(Math.random() * max);
   }
@@ -356,6 +394,11 @@ function rand(max) {
     function drawSpriteImg(coord) {
       var offsetLeft = cellSize / 50;
       var offsetRight = cellSize / 25;
+      if(togglePlayer === true){
+        sprite.src = "personagem.png";
+      } else{
+        sprite.src = "icone.png";
+      }
       ctx.drawImage(
         sprite,
         0,
@@ -396,6 +439,7 @@ function rand(max) {
               x: cellCoords.x - 1,
               y: cellCoords.y
             };
+            togglePlayer = !togglePlayer;
             drawSprite(cellCoords);
           }
           break;
@@ -407,6 +451,7 @@ function rand(max) {
               x: cellCoords.x,
               y: cellCoords.y - 1
             };
+            togglePlayer = !togglePlayer;
             drawSprite(cellCoords);
           }
           break;
@@ -418,6 +463,7 @@ function rand(max) {
               x: cellCoords.x + 1,
               y: cellCoords.y
             };
+            togglePlayer = !togglePlayer;
             drawSprite(cellCoords);
           }
           break;
@@ -429,6 +475,7 @@ function rand(max) {
               x: cellCoords.x,
               y: cellCoords.y + 1
             };
+            togglePlayer = !togglePlayer;
             drawSprite(cellCoords);
           }
           break;
@@ -447,27 +494,30 @@ function rand(max) {
           fingerCount,
           fingerData
         ) {
-          console.log(direction);
           switch (direction) {
             case "up":
               check({
                 keyCode: 38
               });
+              togglePlayer = !togglePlayer;
               break;
             case "down":
               check({
                 keyCode: 40
               });
+              togglePlayer = !togglePlayer;
               break;
             case "left":
               check({
                 keyCode: 37
               });
+              togglePlayer = !togglePlayer;
               break;
             case "right":
               check({
                 keyCode: 39
               });
+              togglePlayer = !togglePlayer;
               break;
           }
         },
@@ -484,24 +534,34 @@ function rand(max) {
   
     this.bindKeyDown();
   }
+
+  function desenhar(){
+    cellSize = mazeCanvas.width / difficulty;
+    if (player != null) {
+      ctx.drawImage(fundo,0,0,viewWidth = $("#view").width(), $("#view").height());
+      draw.redrawMaze(cellSize);
+      
+      player.redrawPlayer(cellSize);   
+      mazeCanvas.style.backgroundImage = "url('fundo.gif')";
+    }
+    mouse.desenhar();
+    window.requestAnimationFrame(desenhar);
+  }
   
-  var mazeCanvas = document.getElementById("mazeCanvas");
-  var ctx = mazeCanvas.getContext("2d");
-  var sprite;
-  var finishSprite;
-  var maze, draw, player;
-  var cellSize;
-  var difficulty;
   
-  window.onload = function() {
+  function main() {
     let viewWidth = $("#view").width();
     let viewHeight = $("#view").height();
     if (viewHeight < viewWidth) {
-      ctx.canvas.width = viewHeight - viewHeight / 100;
-      ctx.canvas.height = viewHeight - viewHeight / 100;
+      largura = viewHeight - viewHeight / 100;
+      altura = viewHeight - viewHeight / 100;
+      ctx.canvas.width = largura;
+      ctx.canvas.height = altura;
     } else {
-      ctx.canvas.width = viewWidth - viewWidth / 100;
-      ctx.canvas.height = viewWidth - viewWidth / 100;
+      largura = viewWidth - viewWidth / 100;
+      altura = viewWidth - viewWidth / 100;
+      ctx.canvas.width = largura
+      ctx.canvas.height = altura;
     }
 
     var completeOne = false;
@@ -509,10 +569,9 @@ function rand(max) {
     var isComplete = () => {
       if(completeOne === true && completeTwo === true)
          {
-           console.log("Runs");
-           setTimeout(function(){
+          setTimeout(function(){
              makeMaze();
-           }, 500);         
+          }, 500);         
          }
     };
 
@@ -525,7 +584,6 @@ function rand(max) {
     sprite.onload = function() {
       sprite = changeBrightness(1.2, sprite);
       completeOne = true;
-      console.log(completeOne);
       isComplete();
     };
   
@@ -537,27 +595,40 @@ function rand(max) {
     finishSprite.onload = function() {
       finishSprite = changeBrightness(1.1, finishSprite);
       completeTwo = true;
-      console.log(completeTwo);
       isComplete();
     };
     
+    mazeCanvas.addEventListener("mousemove", function (e) {
+      const rect = mazeCanvas.getBoundingClientRect();
+      mousePosX = e.pageX - rect.left;
+      mousePosY = e.pageY - rect.top;
+    });
+   
+    desenhar();
   };
   
   window.onresize = function() {
     let viewWidth = $("#view").width();
     let viewHeight = $("#view").height();
     if (viewHeight < viewWidth) {
-      ctx.canvas.width = viewHeight - viewHeight / 100;
-      ctx.canvas.height = viewHeight - viewHeight / 100;
+      largura = viewHeight - viewHeight / 100;
+      altura = viewHeight - viewHeight / 100;
+      ctx.canvas.width = largura;
+      ctx.canvas.height = altura;
     } else {
-      ctx.canvas.width = viewWidth - viewWidth / 100;
-      ctx.canvas.height = viewWidth - viewWidth / 100;
+      largura = viewWidth - viewWidth / 100;
+      altura = viewWidth - viewWidth / 100;
+      ctx.canvas.width = largura
+      ctx.canvas.height = altura;
     }
+
     cellSize = mazeCanvas.width / difficulty;
     if (player != null) {
       draw.redrawMaze(cellSize);
-      player.redrawPlayer(cellSize);
+      player.redrawPlayer(cellSize);   
     }
+
+   
   };
   
   function makeMaze() {
@@ -565,13 +636,15 @@ function rand(max) {
       player.unbindKeyDown();
       player = null;
     }
+    
     var e = document.getElementById("diffSelect");
     difficulty = e.options[e.selectedIndex].value;
     cellSize = mazeCanvas.width / difficulty;
     maze = new Maze(difficulty, difficulty);
     draw = new DrawMaze(maze, ctx, cellSize, finishSprite);
     player = new Player(maze, mazeCanvas, cellSize, displayVictoryMess, sprite);
+   
     if (document.getElementById("mazeContainer").style.opacity < "100") {
       document.getElementById("mazeContainer").style.opacity = "100";
-    }
+    } 
   }
