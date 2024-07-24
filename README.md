@@ -22,7 +22,7 @@
 <hr>
 <br>
 
-<h4 align="center">DISCLAIMER: "Maze Runner" is a personal project, developed for the "Digital Games For Web" subject, coded "IJD005", at Faculdade de Tecnologia de Americana (FATEC-AM), located in Americana, São Paulo, Brazil.<h4>
+<h4 align="center">DISCLAIMER: "Maze Runner" is a personal project, developed for the "Digital Games For Web" subject, coded "IJD005", at Faculdade de Tecnologia de Americana, located in Americana, São Paulo, Brazil.<h4>
 <h4 align="center">This project does NOT comercially profit today, has NOT comercially profited in the past, and will NOT comercially profit in the future.</h4>
 <h4 align="center">The owners and participants of this project do not sell, endorse the selling or receive any money for the copies of this project, strictly because there is copyrighted material from third parties developed into it.</h4>
 <br>
